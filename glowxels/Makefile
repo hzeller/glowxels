@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-FABS=glowxels.zip
+FABS=glowxels-fab.zip
 
 all : $(FABS)
 
