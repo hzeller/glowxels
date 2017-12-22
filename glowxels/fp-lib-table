@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name Glowxels)(type KiCad)(uri ${KIPRJMOD}/glowxels.pretty)(options "")(descr ""))
+)
