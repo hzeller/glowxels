@@ -1373,7 +1373,7 @@ U 1 1 5A41AC88
 P 1100 2700
 F 0 "J1" H 1300 2550 50  0000 C CNN
 F 1 "OUT" H 1300 2700 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch1.27mm" H 1100 2700 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch2.00mm" H 1100 2700 50  0001 C CNN
 F 3 "~" H 1100 2700 50  0001 C CNN
 	1    1100 2700
 	-1   0    0    1   
@@ -1406,7 +1406,7 @@ U 1 1 5A567670
 P 7950 2700
 F 0 "J2" H 8150 2650 50  0000 C CNN
 F 1 "IN" H 8150 2800 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch1.27mm" H 7950 2700 50  0001 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch2.00mm" H 7950 2700 50  0001 C CNN
 F 3 "~" H 7950 2700 50  0001 C CNN
 	1    7950 2700
 	1    0    0    1   
@@ -1691,7 +1691,7 @@ Wire Wire Line
 Connection ~ 7800 1250
 Text Label 7800 1400 0    60   ~ 0
 LED-Power
-Text Notes 2300 4000 0    60   ~ 0
+Text Notes 550  2900 0    60   ~ 0
 latch\nclk\noe\ndata\nvdd
 Wire Wire Line
 	2450 2450 2450 2900
