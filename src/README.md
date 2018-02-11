@@ -3,7 +3,6 @@ To compile: Needs wiringpi and libpng
 sudo aptitude install wiringpi libpng-dev
 ```
 
-```
 Usage essentially:
 
 ```
@@ -14,6 +13,7 @@ Options:
 ```
 
 Example:
+
 ```
   ./glow ~/someimage.png
 ```
