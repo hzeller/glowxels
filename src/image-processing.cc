@@ -104,18 +104,18 @@ BitmapImage *LoadPNGImage(const char *filename, bool invert) {
     for (int y = 0; y < height; ++y) {
         png_read_row(png, row_data, NULL);
         png_byte *from_pixel = row_data;
-        uint8_t *to_byte = result->GetMutableRow(y);
+        uint8_t *to_byte = result->GetMutableRow(y) + result->width()/8 - 1;
         for (int x = 0; x < result->width(); x+= 8) {
-            *to_byte |= (*from_pixel > 128) << 7; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 6; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 5; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 4; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 3; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 2; from_pixel += bytes_per_pixel;
-            *to_byte |= (*from_pixel > 128) << 1; from_pixel += bytes_per_pixel;
             *to_byte |= (*from_pixel > 128) << 0; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 1; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 2; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 3; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 4; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 5; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 6; from_pixel += bytes_per_pixel;
+            *to_byte |= (*from_pixel > 128) << 7; from_pixel += bytes_per_pixel;
             if (invert) *to_byte = ~*to_byte;
-            to_byte += 1;
+            to_byte -= 1;
         }
     }
 
