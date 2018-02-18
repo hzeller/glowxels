@@ -35,7 +35,7 @@ int usage(const char *progname) {
 }
 
 int main(int argc, char *argv[]) {
-    bool dir = true;
+    bool dir = false;
     bool inverse = true;
     bool retract = false;
     bool fast = false;

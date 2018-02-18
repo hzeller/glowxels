@@ -55,9 +55,14 @@ private:
     // Don't call directly, call the factory.
     GlowxelScreen(bool reverse_stepper_direction);
 
-    const bool stepper_direction_;
+    // Set motor state. Returns 'true' if this changed the current state.
+    bool SetMotorState(bool on, bool direction_forward);
+
+    const bool stepper_direction_wiring_;
     float brightness_;
     int step_delay_;
+    bool motor_is_on_;
+    bool motor_direction_;
 };
 
 #endif  // GLOW_GLOWXELS_SCREEN_H

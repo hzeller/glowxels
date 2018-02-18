@@ -77,14 +77,13 @@ GlowxelScreen *GlowxelScreen::CreateInstance(bool reverse_stepper_direction) {
 }
 
 GlowxelScreen::GlowxelScreen(bool reverse_stepper_direction)
-    : stepper_direction_(reverse_stepper_direction),
-      brightness_(0.7), step_delay_(kRegularStepDelay) {
+    : stepper_direction_wiring_(reverse_stepper_direction),
+      brightness_(0.7), step_delay_(kRegularStepDelay),
+      motor_is_on_(false), motor_direction_(false) {
     pinMode(OUTPUT_ENABLE, OUTPUT);     // Maybe later PWM ?
     pinMode(MOTOR_ENABLE, OUTPUT);
     pinMode(MOTOR_STEP, OUTPUT);
     pinMode(MOTOR_DIR, OUTPUT);
-
-    digitalWrite(MOTOR_ENABLE, LOW);    // Enable motor while we're active.
 }
 
 GlowxelScreen::~GlowxelScreen() {
@@ -110,35 +109,45 @@ static void motorSteps(int steps, int step_delay) {
     }
 }
 
-// Get row if it is within range, null otherwise.
-static const uint8_t *GetRowOrNull(const BitmapImage &img, int row) {
-    if (row < 0 || row >= img.height()) return nullptr;
+bool GlowxelScreen::SetMotorState(bool on, bool dir) {
+    dir ^= stepper_direction_wiring_;
+    if (motor_is_on_ == on && dir == motor_direction_)
+        return false;
+    digitalWrite(MOTOR_DIR, dir ? LOW : HIGH);
+    motor_direction_ = dir;
+    digitalWrite(MOTOR_ENABLE, on ? LOW : HIGH);
+    motor_is_on_ = on;
+    return true;
+}
+
+// Get row if it is within range or return fallback buffer if not.
+static const uint8_t *RowOrFallback(const BitmapImage &img, int row,
+                                    const uint8_t *fallback) {
+    if (row < 0 || row >= img.height()) return fallback;
     return img.GetRow(row);
 }
 
 void GlowxelScreen::ShowImage(const BitmapImage &img) {
-    digitalWrite(MOTOR_DIR, stepper_direction_ ? LOW : HIGH);
-    motorSteps(kAccelerateSteps, 2*step_delay_);
+    if (SetMotorState(true, true)) {
+        // Need to do some acceleration first.
+        motorSteps(kAccelerateSteps, 2*step_delay_);
+    }
 
     const int image_width_bytes = std::min(img.width() / 8, kRowLengthBytes);
-    const int alternating_pixel_y_offset = 3;
+    const int y_pixel_offset = 3;  // LEDs are mounted zigzag offset with 3.
     unsigned char *const buffer = new unsigned char[kRowLengthBytes];
     const int start_byte = kRowLengthBytes - image_width_bytes;
     const int light_steps = std::max(0.0f, brightness_ * kStepsPerPixel);
     const int dark_steps = kStepsPerPixel - light_steps;
 
-    for (int r = img.height() - 1; r >= -alternating_pixel_y_offset; --r) {
+    for (int r = img.height() - 1; r >= -y_pixel_offset; --r) {
         memset(buffer, 0x00, kRowLengthBytes);
-        const uint8_t *first = GetRowOrNull(img, r);
-        const uint8_t *second = GetRowOrNull(img,
-                                             r + alternating_pixel_y_offset);
+        // If outside pixel range, we just alias with our empty buffer
+        const uint8_t *first  = RowOrFallback(img, r, buffer);
+        const uint8_t *second = RowOrFallback(img, r + y_pixel_offset, buffer);
         for (int i = 0; i < image_width_bytes; ++i) {
-            if (first && second)
-                buffer[start_byte+i] = (*first++ & 0x55) | (*second++ & 0xaa);
-            else if (first)
-                buffer[start_byte+i] = (*first++ & 0x55);
-            else if (second)
-                buffer[start_byte+i] = (*second++ & 0xaa);
+            // Alternative bits from alternative rows to match zig-zag LED mount
+            buffer[start_byte+i] = (*first++ & 0x55) | (*second++ & 0xaa);
         }
         wiringPiSPIDataRW(0, buffer, kRowLengthBytes);
         digitalWrite(OUTPUT_ENABLE, LOW);
@@ -150,7 +159,7 @@ void GlowxelScreen::ShowImage(const BitmapImage &img) {
 }
 
 void GlowxelScreen::Retract(int extra_pixels) {
-    digitalWrite(MOTOR_DIR, !stepper_direction_ ? LOW : HIGH);
+    SetMotorState(true, false);
     motorSteps(kAccelerateSteps, 2*step_delay_);
     motorSteps(kCanvasEjectSteps - kAccelerateSteps, step_delay_);
     // decelerate, and prepare for the acceleration
@@ -160,4 +169,5 @@ void GlowxelScreen::Retract(int extra_pixels) {
 void GlowxelScreen::Eject(int extra_pixels) {
     motorSteps(kCanvasEjectSteps - kAccelerateSteps, step_delay_);
     motorSteps(kAccelerateSteps + extra_pixels*kStepsPerPixel, 2*step_delay_);
+    SetMotorState(false, true);
 }
