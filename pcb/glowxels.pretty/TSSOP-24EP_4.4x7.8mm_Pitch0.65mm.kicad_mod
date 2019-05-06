@@ -1,4 +1,4 @@
-(module TSSOP-24EP_4.4x7.8mm_Pitch0.65mm (layer F.Cu) (tedit 5A388B97)
+(module TSSOP-24EP_4.4x7.8mm_Pitch0.65mm (layer F.Cu) (tedit 5CCFA3F2)
   (descr "TSSOP24: plastic thin shrink small outline package; 24 leads; body width 4.4 mm; (see NXP SSOP-TSSOP-VSO-REFLOW.pdf and sot355-1_po.pdf)")
   (tags "SSOP 0.65")
   (attr smd)
@@ -53,7 +53,7 @@
   (pad 25 smd rect (at 0.8 -1.25) (size 1.6 2.5) (layers F.Cu F.Paste F.Mask))
   (pad 25 smd rect (at -0.8 1.25) (size 1.6 2.5) (layers F.Cu F.Paste F.Mask))
   (pad 25 smd rect (at 0.8 1.25) (size 1.6 2.5) (layers F.Cu F.Paste F.Mask))
-  (model ${KISYS3DMOD}/Housings_SSOP.3dshapes/TSSOP-24_4.4x7.8mm_Pitch0.65mm.wrl
+  (model ${KISYS3DMOD}/Package_SO.3dshapes/TSSOP-24_4.4x7.8mm_P0.65mm.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
     (rotate (xyz 0 0 0))
