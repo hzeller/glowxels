@@ -1805,4 +1805,6 @@ $EndComp
 Connection ~ 6350 2900
 Wire Wire Line
 	6350 2900 7250 2900
+Text Label 1400 1750 1    39   ~ 0
+FirstLed
 $EndSCHEMATC
