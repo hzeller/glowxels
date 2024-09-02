@@ -5,13 +5,14 @@
 
 import sys
 import os
-
 from pcbnew import *
-basename=sys.argv[1]
 
-board = LoadBoard(basename + ".kicad_pcb")
+# We base our plot output on the basename provided on the command line.
+filename = sys.argv[1]
 
-plotDir = basename + "/"
+board = LoadBoard(filename)
+
+plotDir = "fab/"
 
 pctl = PLOT_CONTROLLER(board)
 
@@ -19,17 +20,14 @@ popt = pctl.GetPlotOptions()
 
 popt.SetOutputDirectory(plotDir)
 
-# Set some important plot options:
-popt.SetPlotFrameRef(False)
-popt.SetLineWidth(FromMM(0.35))
-
+# plot options (see pcb_plot_params.h for reference)
 popt.SetAutoScale(False)
 popt.SetScale(1)
 popt.SetMirror(False)
 popt.SetUseGerberAttributes(True)
-popt.SetUseGerberProtelExtensions(True)
-popt.SetExcludeEdgeLayer(True);
-popt.SetScale(1)
+popt.SetIncludeGerberNetlistInfo(True)
+popt.SetCreateGerberJobFile(False)
+popt.SetUseGerberProtelExtensions(False)
 popt.SetUseAuxOrigin(True)
 
 # This by gerbers only (also the name is truly horrid!)
@@ -43,30 +41,29 @@ popt.SetSubtractMaskFromSilk(False)
 #   gerbv *
 # just makes sense. The drill-file will be numbered 00 so that it is first.
 plot_plan = [
-    ( Edge_Cuts, "01-Edge_Cuts",   "Edges" ),
+    ( Edge_Cuts, "1-Edge_Cuts",   "Edges" ),
 
-    ( F_SilkS,   "02-SilkTop",     "Silk top" ),
-    ( F_Paste,   "03-PasteTop",    "Paste top" ),
-    ( F_Mask,    "04-MaskTop",     "Mask top" ),
-    ( F_Cu,      "05-CuTop",       "Top layer" ),
-
-#    ( In1_Cu,    "06-CuIn1",       "Inner Layer1" ),
-#    ( In2_Cu,    "07-CuIn2",       "Inner Layer2" ),
+    ( F_SilkS,   "2-SilkTop",     "Silk top" ),
+    ( F_Paste,   "3-PasteTop",    "Paste top" ),
+    ( F_Mask,    "4-MaskTop",     "Mask top" ),
+    ( F_Cu,      "5-CuTop",       "Top layer" ),
 
     # We show the mask stacked first for easier visual inspection with copper
-    ( B_Mask,    "08-MaskBottom",  "Mask bottom" ),
-    ( B_Cu,      "09-CuBottom",    "Bottom layer" ),
-    ( B_Paste,   "10-PasteBottom", "Paste Bottom" ),
-    ( B_SilkS,   "11-SilkBottom",  "Silk Bottom" ),
+    ( B_Mask,    "6-MaskBottom",  "Mask bottom" ),
+    ( B_Cu,      "7-CuBottom",    "Bottom layer" ),
+    ( B_Paste,   "8-PasteBottom", "Paste Bottom" ),
+    ( B_SilkS,   "9-SilkBottom",  "Silk Bottom" ),
 ]
 
 
 for layer_info in plot_plan:
+    popt.SetSkipPlotNPTH_Pads(layer_info[0] <= B_Cu)
     pctl.SetLayer(layer_info[0])
     pctl.OpenPlotfile(layer_info[1], PLOT_FORMAT_GERBER, layer_info[2])
     # In case boardhouses can't deal with detailed names: this removes them.
     #pctl.OpenPlotfile("", PLOT_FORMAT_GERBER, layer_info[2])
-    pctl.PlotLayer()
+    if pctl.PlotLayer() == False:
+        print("plot error " % pctl.GetPlotFileName())
 
 # At the end you have to close the last plot, otherwise you don't know when
 # the object will be recycled!
@@ -79,7 +76,7 @@ drlwriter.SetMapFileFormat( PLOT_FORMAT_PDF )
 
 mirror = False
 minimalHeader = False
-offset = wxPoint(0,0)
+offset = VECTOR2I(0, 0)
 mergeNPTH = True   # non-plated through-hole
 drlwriter.SetOptions( mirror, minimalHeader, offset, mergeNPTH )
 
@@ -90,14 +87,8 @@ genDrl = True
 genMap = False
 drlwriter.CreateDrillandMapFilesSet( plotDir, genDrl, genMap );
 
+basename = filename[:-10]  # chop off .kicad_pcb
 # We can't give just the filename for the name of the drill file at generation
 # time, but we do want its name to be a bit different to show up on top.
 # So this is an ugly hack to rename the drl-file to have a 0 in the beginning.
-#print plotDir + "/" + basename + ".drl"
-os.rename(plotDir + basename + ".drl", plotDir + basename + "-00.drl")
-
-# Adapt some filenames for some board-houses.
-#os.rename(plotDir + basename + ".drl", plotDir + basename + ".txt")
-#os.rename(plotDir + basename + ".g2", plotDir + basename + ".gl2")
-#os.rename(plotDir + basename + ".g3", plotDir + basename + ".gl3")
-#os.rename(plotDir + basename + ".gm1", plotDir + basename + ".gml")
+os.rename(plotDir + basename + ".drl", plotDir + basename + "-0.drl")
