@@ -12,4 +12,4 @@ all : $(FABS)
 	sed "s/%%gitversion%%/`git log --date=short --pretty=format:'%h@%cd' -n 1 $<`/" < $^ > $@
 
 clean:
-	rm -rf $(FABS) $(FABS:.zip=)
+	rm -rf $(FABS) fab
