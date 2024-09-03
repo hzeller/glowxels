@@ -1,4 +1,6 @@
 *.o
 *~
-glowxels-fab/
-
+fab/
+glowxels-fab.zip
+.envrc
+.direnv
