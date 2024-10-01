@@ -21590,6 +21590,19 @@
 			(justify left bottom mirror)
 		)
 	)
+	(gr_text "%%gitversion%%"
+		(at 100.9 41.8 270)
+		(layer "F.SilkS")
+		(uuid "492dfbda-4351-4bbe-8994-4b5978b08e76")
+		(effects
+			(font
+				(size 0.6 0.6)
+				(thickness 0.1)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text "VLED"
 		(at 48.3 42.4 0)
 		(layer "F.SilkS")
@@ -21612,6 +21625,19 @@
 				(thickness 0.15)
 			)
 			(justify left bottom)
+		)
+	)
+	(gr_text "Tiny Glowxels | https://github.com/hzeller/glowxels"
+		(at 73.3 52.6 0)
+		(layer "F.SilkS")
+		(uuid "f0807f13-14c1-45ac-bac0-3c81dabc4615")
+		(effects
+			(font
+				(size 0.6 0.6)
+				(thickness 0.1)
+				(bold yes)
+			)
+			(justify bottom)
 		)
 	)
 	(segment
