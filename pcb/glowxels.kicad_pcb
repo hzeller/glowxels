@@ -24623,7 +24623,7 @@
 		)
 	)
 	(gr_text "CLK"
-		(at 98.8 43.2 270)
+		(at 96.9 41.402 270)
 		(layer "B.SilkS")
 		(uuid "5cfb5822-8bfc-40ae-a996-48862ccbb8e6")
 		(effects
@@ -24631,7 +24631,7 @@
 				(size 0.6 0.6)
 				(thickness 0.1)
 			)
-			(justify left bottom mirror)
+			(justify right bottom mirror)
 		)
 	)
 	(gr_text "GND"
@@ -24659,7 +24659,7 @@
 		)
 	)
 	(gr_text "LAT"
-		(at 96.9 43 270)
+		(at 98.865 41.4528 270)
 		(layer "B.SilkS")
 		(uuid "9e1bfdb6-26f4-475b-a640-e5bb72bda528")
 		(effects
@@ -24667,7 +24667,7 @@
 				(size 0.6 0.6)
 				(thickness 0.1)
 			)
-			(justify left bottom mirror)
+			(justify right bottom mirror)
 		)
 	)
 	(gr_text "%%gitversion%%"
