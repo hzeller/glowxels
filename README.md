@@ -22,7 +22,7 @@ the Raspberry Pi (with CS connected Latch), this is super-simple to wire.
 Each board carries 64 LEDs and can be chained easily. The first glowxels screen
 had 5 boards chained for 320 pixels on a 48cm wide screen.
 
-A Narrow version is in the [feature-20240902-narrow](https://github.com/hzeller/glowxels/tree/feature-20240902-narrow) branch.
+A narrow version with 0.8mm pixel density is in the [feature-20240902-narrow](https://github.com/hzeller/glowxels/tree/feature-20240902-narrow) branch.
 
 ![](./img/schematic.png)
 ![](./img/board-render.png)
