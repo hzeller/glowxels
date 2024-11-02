@@ -5,6 +5,9 @@ Driving 405nm LED line to make a pixelated glow-in-the-dark display.
 
 [![Glow Watch](img/in-action.jpg)](https://youtube.com/shorts/eKfHcU8QpuA)
 
+This repo contains the addressed LED row, the rest is found in
+https://github.com/hzeller/glowtape
+
 The pitch is relatively small with 0.8mm for a width of 51.2mm with 64 LEDs.
 It is achived with two rows of 1.6mm pitch with 0603 LED mounted in a
 zig-zag pattern to have the adjacent pixels without visible gap in X-direction.
