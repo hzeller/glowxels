@@ -9,7 +9,7 @@ pkgs.mkShell {
       kicad
       gerbv
       python3
-      python312Packages.kicad
+      python3Packages.kicad
       zip
 
       openscad
